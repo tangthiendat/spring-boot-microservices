@@ -1,0 +1,50 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: api-gateway
+  #  cloud:
+  #    gateway:
+  #      discovery:
+  #        locator:
+  #          enabled: true
+  #          lower-case-service-id: true
+  cloud:
+    gateway:
+      routes:
+        - id: user-ws-status-check
+          uri: lb://user-ws
+          predicates:
+            - Path=/users/status/check
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+        - id: user-ws-login
+          uri: lb://user-ws
+          predicates:
+            - Path=/users/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: user-ws-signup
+          uri: lb://user-ws
+          predicates:
+            - Path=/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: user-ws-get-update-delete
+          uri: lb://user-ws
+          predicates:
+            - Path=/users/**
+            - Method=GET,PUT,DELETE
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka
