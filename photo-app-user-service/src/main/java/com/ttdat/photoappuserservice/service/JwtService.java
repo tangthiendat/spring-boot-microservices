@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,9 +50,10 @@ public class JwtService {
                               long expiration) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .issuer("TTD-AUTH-SERVER")
                 .claims(extraClaims)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .issuedAt(Date.from(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toInstant()))
+                .expiration(Date.from(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toInstant().plusMillis(expiration)))
                 .signWith(getSecretKey()).compact();
     }
 

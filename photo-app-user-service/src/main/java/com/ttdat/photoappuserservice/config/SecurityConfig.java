@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/users/**").permitAll()
+                                .requestMatchers("/api/v1/users/**").permitAll()
 //                                .access(new WebExpressionAuthorizationManager("hasIpAddress(\"" + gatewayIp + "\")"))
                 )
 //                .authenticationManager(authenticationManager)
